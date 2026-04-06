@@ -4,7 +4,7 @@ WORKDIR /app
 # Development
 FROM base AS development
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 COPY . .
 EXPOSE 3000
 CMD ["npm", "run", "dev"]
@@ -12,7 +12,7 @@ CMD ["npm", "run", "dev"]
 # Builder
 FROM base AS builder
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
