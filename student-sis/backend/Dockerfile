@@ -25,7 +25,10 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package.json ./
-RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+# Create logs dir and set ownership BEFORE switching to non-root user
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 \
+    && mkdir -p /app/logs \
+    && chown -R nodejs:nodejs /app/logs
 USER nodejs
 EXPOSE 4000
 CMD ["node", "src/index.js"]
